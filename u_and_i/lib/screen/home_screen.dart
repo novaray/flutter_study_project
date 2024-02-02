@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  DateTime firstDay = DateTime.parse('2021-01-10');
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +22,57 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _DDay(),
+            _DDay(
+              onHeartPressed: onHeartPressed,
+              firstDay: firstDay,
+            ),
             _CoupleImage(),
           ],
-        )
-      )
+        ),
+      ),
+    );
+  }
+
+  void onHeartPressed() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            color: Colors.white,
+            height: 300,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (DateTime date) {
+                setState(() {
+                  firstDay = date;
+                });
+              },
+              maximumDate: DateTime.now().add(const Duration(days: 1)),
+            ),
+          ),
+        );
+      },
+      barrierDismissible: true,
     );
   }
 }
 
 class _DDay extends StatelessWidget {
- @override
+  final GestureTapCallback onHeartPressed;
+  final DateTime firstDay;
+
+  _DDay({
+    required this.onHeartPressed,
+    required this.firstDay
+  });
+
+  @override
   Widget build(BuildContext context) {
    final textTheme = Theme.of(context).textTheme;
+   final now = DateTime.now();
+
    return Column(
      children: [
        const SizedBox(height: 16.0),
@@ -40,13 +86,13 @@ class _DDay extends StatelessWidget {
          style: textTheme.bodyLarge
        ),
        Text(
-         '2021.01.10',
+         '${firstDay.year}.${firstDay.month}.${firstDay.day}',
          style: textTheme.bodyMedium
        ),
        const SizedBox(height: 16.0),
        IconButton(
          iconSize: 60.0,
-         onPressed: () {},
+         onPressed: onHeartPressed,
          icon: Icon(
            Icons.favorite,
            color: Colors.red,
@@ -54,12 +100,12 @@ class _DDay extends StatelessWidget {
        ),
        const SizedBox(height: 16.0),
        Text(
-         'D+365',
+         'D+${DateTime(now.year, now.month, now.day).difference(firstDay).inDays + 1}',
          style: textTheme.displayMedium
        ),
      ],
    );
- }
+  }
 }
 
 class _CoupleImage extends StatelessWidget {
