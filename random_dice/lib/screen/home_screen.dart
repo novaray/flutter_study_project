@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 12.0),
         Text(
           number.toString(),
-          style: TextStyle(
+          style: const TextStyle(
             color: primaryColor,
             fontSize: 60.0,
             fontWeight: FontWeight.w200,
