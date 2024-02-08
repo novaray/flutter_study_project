@@ -49,6 +49,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        // Cannot fit requested classes in a single dex file (# methods: 67107 > 65536) 오류가 발생해 추가
+        multiDexEnabled true
     }
 
     buildTypes {
