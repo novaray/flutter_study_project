@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vid_player/screen/custom_video_player.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,7 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _Logo(),
+          _Logo(
+            onTap: onNewVideoPressed,
+          ),
           const SizedBox(height: 30.0),
           _AppName(),
         ],
@@ -47,17 +50,39 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void onNewVideoPressed() async {
+    final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
+
+    if (video != null) {
+      setState(() {
+        this.video = video;
+      });
+    }
+  }
+
   Widget renderVideo() {
-    return Container();
+    return Center(
+      child: CustomVideoPlayer(
+        video: video!,
+        onNewVideoPressed: onNewVideoPressed,
+      ),
+    );
   }
 }
 
 class _Logo extends StatelessWidget {
-  const _Logo({Key? key}) : super(key: key);
+  final GestureTapCallback? onTap;
+  const _Logo({
+    required this.onTap,
+    Key? key
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset('asset/image/logo.png');
+    return GestureDetector(
+      onTap: onTap,
+      child: Image.asset('asset/image/logo.png'),
+    );
   }
 }
 
